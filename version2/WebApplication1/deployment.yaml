@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weatherapp-deployment
+spec:
+  selector:
+    matchLabels:
+      app: weatherapp
+  replicas: 2 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: weatherapp
+    spec:
+      containers:
+      - name: weatherapp
+        image: msjikuma/weatherapptest  # Image name
+        ports:
+        - containerPort: 80 # port to expose 
+        volumeMounts:
+        - mountPath: /config
+          name: application-configuration
+        - mountPath: /secret
+          name: application-secret
+          readOnly: true
+      volumes:
+        - name: application-configuration
+          configMap:
+            name: game-demo
+        - name: application-secret
+          secret:
+            secretName: application-secret
